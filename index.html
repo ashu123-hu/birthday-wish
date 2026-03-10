@@ -8,34 +8,13 @@
 body{
 margin:0;
 background:black;
-color:white;
+overflow:hidden;
 font-family:Arial;
 text-align:center;
-overflow:hidden;
+color:white;
 }
 
-/* fireworks canvas */
-
-canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:0;
-}
-
-/* gift box */
-
-#gift{
-font-size:120px;
-cursor:pointer;
-position:absolute;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%);
-z-index:3;
-}
-
-/* full screen photo */
+/* photo full screen */
 
 #photo{
 position:fixed;
@@ -44,20 +23,26 @@ left:0;
 width:100%;
 height:100%;
 object-fit:cover;
-display:none;
-z-index:1;
+opacity:0;
+animation:fadeIn 4s forwards;
+}
+
+/* fade animation */
+
+@keyframes fadeIn{
+0%{opacity:0}
+100%{opacity:1}
 }
 
 /* message */
 
 #message{
 position:absolute;
-top:15%;
+top:12%;
 width:100%;
-font-size:40px;
+font-size:45px;
+text-shadow:0 0 25px pink;
 z-index:2;
-display:none;
-text-shadow:0 0 20px #ff4da6;
 }
 
 /* hearts */
@@ -65,13 +50,22 @@ text-shadow:0 0 20px #ff4da6;
 .heart{
 position:absolute;
 bottom:-20px;
-font-size:22px;
+font-size:24px;
 animation:float 6s linear infinite;
 }
 
 @keyframes float{
 0%{transform:translateY(0);}
 100%{transform:translateY(-100vh);}
+}
+
+/* fireworks */
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:1;
 }
 
 </style>
@@ -81,26 +75,15 @@ animation:float 6s linear infinite;
 
 <canvas id="fireworks"></canvas>
 
-<div id="gift">🎁</div>
-
-<div id="message">Happy Birthday Anjali 🎂</div>
+<h1 id="message">Happy Birthday Anjali 🎂</h1>
 
 <img id="photo" src="anjali.jpg">
 
-<audio id="music" src="anjali.mp3"></audio>
+<audio autoplay loop>
+<source src="anjali.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-
-/* open gift */
-
-document.getElementById("gift").onclick=function(){
-
-document.getElementById("gift").style.display="none";
-document.getElementById("photo").style.display="block";
-document.getElementById("message").style.display="block";
-document.getElementById("music").play();
-
-}
 
 /* hearts */
 
@@ -112,7 +95,7 @@ heart.style.left=Math.random()*100+"vw";
 
 document.body.appendChild(heart);
 
-setTimeout(()=>{heart.remove();},6000);
+setTimeout(()=>{heart.remove()},6000);
 }
 
 setInterval(createHeart,400);
@@ -127,26 +110,32 @@ canvas.height=window.innerHeight;
 
 let particles=[];
 
-function createFirework(){
+function firework(){
+
 let x=Math.random()*canvas.width;
 let y=Math.random()*canvas.height/2;
 
 for(let i=0;i<60;i++){
+
 particles.push({
 x:x,
 y:y,
 vx:(Math.random()-0.5)*6,
 vy:(Math.random()-0.5)*6,
 life:100
-});
+})
+
 }
+
 }
 
 function animate(){
+
 ctx.fillStyle="rgba(0,0,0,0.2)";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 particles.forEach((p,i)=>{
+
 p.x+=p.vx;
 p.y+=p.vy;
 p.life--;
@@ -155,15 +144,17 @@ ctx.fillStyle="hsl("+Math.random()*360+",100%,50%)";
 ctx.fillRect(p.x,p.y,3,3);
 
 if(p.life<=0){
-particles.splice(i,1);
-}
-});
-
-requestAnimationFrame(animate);
+particles.splice(i,1)
 }
 
-setInterval(createFirework,800);
-animate();
+})
+
+requestAnimationFrame(animate)
+
+}
+
+setInterval(firework,800)
+animate()
 
 </script>
 
